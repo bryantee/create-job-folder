@@ -28,7 +28,7 @@ def copyDir(new_dir):
 
 # Check to see if path exists in config file and saves to variable
 # If not, then it asks user and saves input to variable and line for future
-my_file = open("dropbox_path.txt", "r+")
+my_file = open("dropbox_path.txt", "w+")
 dropbox_path = ''
 dropbox_path = my_file.readline()
 
