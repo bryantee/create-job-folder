@@ -24,11 +24,11 @@ def copyDir(new_dir):
     """copies files over to new directory from template"""
     copytree(path_to_template, new_dir)
     print("DONE and COPIED!")
-  
+
 
 # Check to see if path exists in config file and saves to variable
 # If not, then it asks user and saves input to variable and line for future
-my_file = open("/home/bryan/Desktop/test.txt", "r+")
+my_file = open("dropbox_path.txt", "r+")
 dropbox_path = ''
 dropbox_path = my_file.readline()
 
@@ -38,17 +38,17 @@ if dropbox_path == '':
     my_file.write(str(dropbox_path))
 else:
     print("Dropbox path is: %s" % dropbox_path)
-my_file.close()  
+my_file.close()
 
 # Welcome Screen
-# User selects what client to use for folder 
+# User selects what client to use for folder
 print("-= WELCOME TO THE JOB FOLDER TEMPLATE START =- \n")
 print("Choose a client: \n")
 print("1.) Fannie Mae\n")
 print("2.) Custom\n")
 print("3.) Home Depot\n")
 print("4.) Home Advisor\n")
-print("5.) American Homes\n") 
+print("5.) American Homes\n")
 print("6.) Renovations Expert\n")
 
 client_selected = int(input("(Enter only the number for the coresponding job type: "))
@@ -89,7 +89,7 @@ print("Today's date is %s" % todays_date)
 if client_selected == 2 or client_selected == 4 or client_selected == 6:
 	customer_address = (input("What is the STREET NAME at this property? : "))
 	customer_name = (input("What is the LAST name of the customer? : "))
-	customer_name = customer_name.upper()   
+	customer_name = customer_name.upper()
 else:
 	customer_address = input("What is the address? ")
 
@@ -100,7 +100,3 @@ else:
 	copyDir(newDir(todays_date, customer_address))
 
 input("Press any to close...")
-
-
-
-	
