@@ -44,18 +44,17 @@ my_file.close()
 # User selects what client to use for folder
 print("-= WELCOME TO THE JOB FOLDER TEMPLATE START =- \n")
 print("Choose a client: \n")
-print("1.) Fannie Mae\n")
+print("1.) Charter Home Alliance\n")
 print("2.) Custom\n")
-print("3.) Home Depot\n")
+print("3.) Nu Tone\n")
 print("4.) Home Advisor\n")
 print("5.) American Homes\n")
-print("6.) Renovations Expert\n")
 
 client_selected = int(input("(Enter only the number for the coresponding job type: "))
 
 # PATH variables
 if client_selected == 1:
-    client_name = 'Fannie Mae'
+    client_name = 'Charter Home Alliance'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Charter Alliance/')
     path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Fannie Mae/xXxADDRESSxXx/')
 elif client_selected == 2:
@@ -63,21 +62,17 @@ elif client_selected == 2:
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Custom/')
     path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Custom/')
 elif client_selected == 3:
-    client_name = 'Home Depot'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Greencraft Interiors/Full properties/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Home Depot/')
+    client_name = 'Nu Tone'
+    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Nu Tone/')
+    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Fannie Mae/xXxADDRESSxXx/')
 elif client_selected == 4:
     client_name = 'Home Advisor'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Home Advisor/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Home Advisor/')
+    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Custom/')
 elif client_selected == 5:
     client_name = 'American Homes'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/AH4R/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/AH4R/')
-elif client_selected == 6:
-    client_name = 'Rennovation Experts'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Renovation Experts/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Home Advisor/')
+    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Custom/')
 
 
 # Get date details, print to console and set variable
@@ -86,15 +81,15 @@ print("Today's date is %s" % todays_date)
 
 # Collect address and customer from user. Used to create directory name.
 
-if client_selected == 2 or client_selected == 4 or client_selected == 6:
-	customer_address = (input("What is the STREET NAME at this property? : "))
+if client_selected == 2 or client_selected == 4:
+	customer_address =  " (" + (input("What is the ADDRESS at this property? : ")) + ")"
 	customer_name = (input("What is the LAST name of the customer? : "))
 	customer_name = customer_name.upper()
 else:
 	customer_address = input("What is the address? ")
 
 # Call function to create dir
-if client_selected == 2 or client_selected == 4 or client_selected == 6:
+if client_selected == 2 or client_selected == 4:
 	copyDir(newDir(todays_date, customer_address, customer_name))
 else:
 	copyDir(newDir(todays_date, customer_address))
