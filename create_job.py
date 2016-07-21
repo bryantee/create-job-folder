@@ -15,7 +15,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
 
 def newDir(date, address, name=''):
     """name and create directory in Dropbox"""
-    directory_name = date + ' - ' + name + " (" + address + ")"
+    directory_name = date + ' - ' + name + address
     os.mkdir(dropbox_path_to_client + directory_name)
     print('%s has been created in Dropbox/%s' % (directory_name, client_name) )
     return (dropbox_path_to_client + directory_name + '/')
@@ -56,7 +56,7 @@ client_selected = int(input("(Enter only the number for the coresponding job typ
 # PATH variables
 if client_selected == 1:
     client_name = 'Fannie Mae'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Charter Alliance/Fannie Mae/')
+    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Charter Alliance/')
     path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Fannie Mae/xXxADDRESSxXx/')
 elif client_selected == 2:
     client_name = 'Custom'
