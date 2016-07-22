@@ -64,7 +64,7 @@ elif client_selected == 2:
 elif client_selected == 3:
     client_name = 'Nu Tone'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Nu Tone/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Fannie Mae/xXxADDRESSxXx/')
+    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/NuTone/')
 elif client_selected == 4:
     client_name = 'Home Advisor'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Home Advisor/')
