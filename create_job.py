@@ -28,16 +28,15 @@ def copyDir(new_dir):
 
 # Check to see if path exists in config file and saves to variable
 # If not, then it asks user and saves input to variable and line for future
-my_file = open("dropbox_path.txt", "w+")
-dropbox_path = ''
-dropbox_path = my_file.readline()
-
-if dropbox_path == '':
+if os.path.isfile('dropbox_path.txt'):
+    my_file = open("dropbox_path.txt", "r")
+    dropbox_path = my_file.readline()
+    print("Dropbox path is: %s" % dropbox_path)
+else:
+    my_file = open("dropbox_path.txt", "w")
     dropbox_path = input("Nothing here. What's the path to Dropbox? (Include trailing '/') ")
     print("...Setting path of dropbox to %s...." % dropbox_path)
     my_file.write(str(dropbox_path))
-else:
-    print("Dropbox path is: %s" % dropbox_path)
 my_file.close()
 
 # Welcome Screen
