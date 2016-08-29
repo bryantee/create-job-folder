@@ -67,11 +67,11 @@ elif client_selected == 3:
 elif client_selected == 4:
     client_name = 'Home Advisor'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Home Advisor/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Custom/')
+    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/AH4R/')
 elif client_selected == 5:
     client_name = 'American Homes'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/AH4R/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Custom/')
+    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/AH4R/')
 
 
 # Get date details, print to console and set variable
