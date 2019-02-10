@@ -2,3 +2,4 @@ create_job.command
 .DS_Store
 # Database
 db.json
+.vscode/.ropeproject
