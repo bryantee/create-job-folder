@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+from tinydb import TinyDB, Query
 import shutil
 import datetime
 import os, sys
@@ -16,7 +17,7 @@ def copytree(src, dst, symlinks=False, ignore=None):
 def newDir(date, address, name=''):
     """name and create directory in Dropbox"""
     directory_name = date + ' - ' + name + address
-    os.mkdir(dropbox_path_to_client + directory_name)
+    os.makedirs(dropbox_path_to_client + directory_name)
     print('%s has been created in Dropbox/%s' % (directory_name, client_name) )
     return (dropbox_path_to_client + directory_name + '/')
 
@@ -25,23 +26,53 @@ def copyDir(new_dir):
     copytree(path_to_template, new_dir)
     print("DONE and COPIED!")
 
+def getDropboxPath():
+    """get the dropbox path from the database or else create one"""
+    Path = Query()
+    items = file_paths.search(Path.type == 'Dropbox')
 
-# Check to see if path exists in config file and saves to variable
-# If not, then it asks user and saves input to variable and line for future
-if os.path.isfile('dropbox_path.txt'):
-    my_file = open("dropbox_path.txt", "r")
-    dropbox_path = my_file.readline()
-    print("Dropbox path is: %s" % dropbox_path)
-else:
-    my_file = open("dropbox_path.txt", "w")
-    dropbox_path = input("Nothing here. What's the path to Dropbox? (Include trailing '/') ")
-    print("...Setting path of dropbox to %s...." % dropbox_path)
-    my_file.write(str(dropbox_path))
-my_file.close()
+    if len(items) > 0:
+        return items[0].get('path')
+    else:
+        return createDropboxPath()
+
+def createDropboxPath():
+    """create the dropbox path and save in database"""
+    path = input("Nothing here. What's the path to Dropbox? (Include trailing '/') ")
+    print("...Setting path of dropbox to %s...." % path)
+    file_paths.insert({ 'type': 'Dropbox', 'path': path })
+
+    return path
+
+def getDefaultTemplatePath():
+    """get the default template path or else create one"""
+    Path = Query()
+    items = file_paths.search(Path.type == 'Default Template')
+
+    if len(items) > 0:
+        return items[0].get('path')
+    else:
+        return createDefaultTemplatePath()
+
+def createDefaultTemplatePath():
+    """create a default template path and save in database"""
+    path = input('What should be the default template path? (Include trailing \'/\')')
+    print("...Setting path of default template to %s...." % path)
+    file_paths.insert({ 'type': 'Default Template', 'path': path })
+
+    return path
+
+
+db = TinyDB('db.json')
+file_paths = db.table('file_paths')
+dropbox_path = getDropboxPath()
+default_template_path = getDefaultTemplatePath()
+print('dropbox_path: %s' % dropbox_path)
+print('default_template_path: %s' % default_template_path)
 
 # Welcome Screen
 # User selects what client to use for folder
-print("-= WELCOME TO THE JOB FOLDER TEMPLATE START =- \n")
+print("\n -= WELCOME TO THE JOB FOLDER TEMPLATE START =- \n")
 print("Choose a client: \n")
 print("1.) Charter Home Alliance\n")
 print("2.) Custom\n")
@@ -55,24 +86,22 @@ client_selected = int(input("(Enter only the number for the coresponding job typ
 if client_selected == 1:
     client_name = 'Charter Home Alliance'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Charter Alliance/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Fannie Mae/xXxADDRESSxXx/')
 elif client_selected == 2:
     client_name = 'Custom'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Custom/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/Custom/')
 elif client_selected == 3:
     client_name = 'Nu Tone'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Nu Tone/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/NuTone/')
 elif client_selected == 4:
     client_name = 'Home Advisor'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/Home Advisor/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/AH4R/')
 elif client_selected == 5:
     client_name = 'American Homes'
     dropbox_path_to_client = (dropbox_path + '1 - Jobs/AH4R/')
-    path_to_template = (dropbox_path + '2 - Documents/1 - Job Folder Templates/AH4R/')
 
+# TODO: Add logic to overide default template path if specified by user
+# this will allow for more flexibility when creating template specific to jobs / clients
+path_to_template = default_template_path
 
 # Get date details, print to console and set variable
 todays_date = str(datetime.date.today())

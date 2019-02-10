@@ -1,4 +1,4 @@
-dropbox_path.txt
 create_job.command
 .DS_Store
-
+# Database
+db.json
