@@ -29,7 +29,7 @@ def copyDir(new_dir):
 def getDropboxPath():
     """get the dropbox path from the database or else create one"""
     Path = Query()
-    items = file_paths.search(Path.type == 'Dropbox')
+    items = file_paths_table.search(Path.type == 'Dropbox')
 
     if len(items) > 0:
         return items[0].get('path')
@@ -40,14 +40,14 @@ def createDropboxPath():
     """create the dropbox path and save in database"""
     path = input("Nothing here. What's the path to Dropbox? (Include trailing '/') ")
     print("...Setting path of dropbox to %s...." % path)
-    file_paths.insert({ 'type': 'Dropbox', 'path': path })
+    file_paths_table.insert({ 'type': 'Dropbox', 'path': path })
 
     return path
 
 def getDefaultTemplatePath():
     """get the default template path or else create one"""
     Path = Query()
-    items = file_paths.search(Path.type == 'Default Template')
+    items = file_paths_table.search(Path.type == 'Default Template')
 
     if len(items) > 0:
         return items[0].get('path')
@@ -58,46 +58,77 @@ def createDefaultTemplatePath():
     """create a default template path and save in database"""
     path = input('What should be the default template path? (Include trailing \'/\')')
     print("...Setting path of default template to %s...." % path)
-    file_paths.insert({ 'type': 'Default Template', 'path': path })
+    file_paths_table.insert({ 'type': 'Default Template', 'path': path })
 
     return path
 
+def createClient(client_name, client_path, client_table):
+    client_table.insert({ 'name': client_name, 'path': client_path })
+
+def promtClientCreation(client_table):
+    client_name = input('Enter the name of a client you would like to add:')
+    client_path = input('Where should the directory be relative to your main directory?:')
+
+    try:
+        createClient(client_name, client_path, client_table)
+        print('Created client %s at %s' % (client_name, client_path))
+    except Exception as inst:
+        print('There was an issue creating the client', inst)
+    
+def clientsExist(client_table):
+    return len(client_table.all()) > 0
+
+def getClientListFromDb():
+    return clients_table.all()
+
+def printClientSelectionList(clients):
+    if len(clients) == 0:
+        print('You don\'t seem to have any clients. We\'ll need to create some to start...\n') 
+    else:
+        print("\n -= WELCOME TO THE JOB FOLDER TEMPLATE START =- \n")
+        print("Choose a client: \n")
+
+        mapOfClients = {}
+
+        for index, item in enumerate(clients, start=1):
+            print('%s.) %s' % (index, item['name']))
+            mapOfClients[index] = item
+
+            if index == len(clients):
+                print('%s.) Add a new one \n' % (str(index + 1)))
+
+        return mapOfClients
 
 db = TinyDB('db.json')
-file_paths = db.table('file_paths')
+file_paths_table = db.table('file_paths')
+clients_table = db.table('clients')
 dropbox_path = getDropboxPath()
 default_template_path = getDefaultTemplatePath()
-print('dropbox_path: %s' % dropbox_path)
-print('default_template_path: %s' % default_template_path)
 
-# Welcome Screen
-# User selects what client to use for folder
-print("\n -= WELCOME TO THE JOB FOLDER TEMPLATE START =- \n")
-print("Choose a client: \n")
-print("1.) Charter Home Alliance\n")
-print("2.) Custom\n")
-print("3.) Nu Tone\n")
-print("4.) Home Advisor\n")
-print("5.) American Homes\n")
+if clientsExist(clients_table) == False:
+    print('Looks like you don\'t have any clients. Let\'s get started by adding some...')
+    promtClientCreation(clients_table)
 
-client_selected = int(input("(Enter only the number for the coresponding job type: "))
 
-# PATH variables
-if client_selected == 1:
-    client_name = 'Charter Home Alliance'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Charter Alliance/')
-elif client_selected == 2:
-    client_name = 'Custom'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Custom/')
-elif client_selected == 3:
-    client_name = 'Nu Tone'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Nu Tone/')
-elif client_selected == 4:
-    client_name = 'Home Advisor'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/Home Advisor/')
-elif client_selected == 5:
-    client_name = 'American Homes'
-    dropbox_path_to_client = (dropbox_path + '1 - Jobs/AH4R/')
+mapOfClients = printClientSelectionList(clients_table.all())
+client_selected = int(input("(Make a selection by number only: "))
+number_of_clients = len(clients_table.all())
+
+if client_selected == number_of_clients + 1:
+    continue_adding = True
+    # Then selection was at for option to add more
+    while continue_adding == True:
+        promtClientCreation(clients_table)
+        continue_input = input('Added! Want to add more? (y/n)')
+        continue_adding = True if continue_input == 'y' else False 
+    
+    mapOfClients = printClientSelectionList(clients_table.all())
+    mapOfClients = printClientSelectionList(clients_table.all())
+    client_selected = int(input("(Make a selection by number only: "))
+
+selectedClient = mapOfClients[client_selected]
+dropbox_path_to_client = dropbox_path + selectedClient['path']
+client_name = selectedClient['name']
 
 # TODO: Add logic to overide default template path if specified by user
 # this will allow for more flexibility when creating template specific to jobs / clients
@@ -108,18 +139,9 @@ todays_date = str(datetime.date.today())
 print("Today's date is %s" % todays_date)
 
 # Collect address and customer from user. Used to create directory name.
-
-if client_selected == 2 or client_selected == 4:
-	customer_address =  " (" + (input("What is the ADDRESS at this property? : ")) + ")"
-	customer_name = (input("What is the LAST name of the customer? : "))
-	customer_name = customer_name.upper()
-else:
-	customer_address = input("What is the address? ")
+customer_address = input("What is the job name? (or address) ")
 
 # Call function to create dir
-if client_selected == 2 or client_selected == 4:
-	copyDir(newDir(todays_date, customer_address, customer_name))
-else:
-	copyDir(newDir(todays_date, customer_address))
+copyDir(newDir(todays_date, customer_address))
 
 input("Press any to close...")
