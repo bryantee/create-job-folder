@@ -1,5 +1,7 @@
 create_job.command
 .DS_Store
+.vscode/.ropeproject
+__pycache__/
+
 # Database
 db.json
-.vscode/.ropeproject

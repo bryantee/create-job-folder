@@ -4,7 +4,7 @@
 This project was concieved years ago while I was working for a general contractor. At the time it aimed to solve the problems we faced with keeping track of jobs and associated files in an organized and structured way. The basic premise of this script was to maintain a client list, and based on the job type being started, a user could easily add the job, assign a client and name the job. The script takes care of appending the correct date for sortability, placing it in the corresponding client folder and then copying over the template directory structure and potential starter files.
 
 ## Roadmap foing forward
-- [ ] Add full database support for easier management and portability
+- [x] Add full database support for easier management and portability
 - [ ] Add a gui using tkinter
 - [ ] Add true dropbox support using sdk
 
